@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="cn.note.dao.NoteBookDao">
+	<sql id="selectAllNoteBook">
+		select cn_notebook_id as noteBookId,
+		cn_user_id as userId,
+		cn_notebook_type_id as typeId,
+		cn_notebook_name as noteBookName,
+		cn_notebook_desc as 'desc',  <!-- desc是MySQL的关键字，加单引号 -->
+		cn_notebook_createtime as createTime
+		from cn_notebook
+	</sql>
+	<select id="findAllNoteBook" resultType="cn.note.entity.NoteBook">
+		<include refid="selectAllNoteBook" />
+	</select>
+	<select id="findNoteBookByNotebookId" parameterType="string"
+		resultType="cn.note.entity.NoteBook">
+		<include refid="selectAllNoteBook"/>
+		where cn_notebook_id=#{noteBookId}
+	</select>
+	<select id="findNoteBookByUserId" parameterType="string"
+		resultType="cn.note.entity.NoteBook">
+		<include refid="selectAllNoteBook" />
+		where cn_user_id=#{userId}
+	</select>
+
+</mapper>
