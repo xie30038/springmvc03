@@ -18,10 +18,25 @@ public class UserController {
 	@Resource
 	private UserService us;
 	
+	//用户名称检验
 	@ResponseBody
 	@RequestMapping("verifyname.do")
 	public JsonResult VerUseerName(String name) {
 		return new JsonResult(us.findUserByName(name));
+	}
+	
+	//用户注册
+	@ResponseBody
+	@RequestMapping("register.do")
+	public JsonResult register(String name,String password,String conf,String nick) {
+		return new JsonResult(us.register(name, password, conf, nick));
+	}
+	
+	//用户登录
+	@ResponseBody
+	@RequestMapping("login.do")
+	public JsonResult login(String name,String password) {
+		return new JsonResult(us.login(name, password));
 	}
 	
 	@ResponseBody

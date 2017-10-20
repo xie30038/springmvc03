@@ -22,4 +22,5 @@ public interface UserService {
 	User login(String name,String password) throws NameException,PasswordException;
 	User findUserByName(String name) throws UserNotFoundException;
 	User findUserById(String userId) throws UserNotFoundException;
+	User register (String name,String password,String conf,String nick);
 }

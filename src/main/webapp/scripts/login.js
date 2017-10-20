@@ -65,6 +65,12 @@ function checkPassword(){
 
 //用户注册函数
 function registerAction(){
+	var name = $('#regist_username').val();
+	var nick = $('#nickname').val();
+	var pwd = $('#regist_password').val();
+	var conf = $('#final_password').val();
+	var url = 'user/register.do';
+	var data = {};
 	
 }
 
@@ -81,15 +87,19 @@ function checkRegName(){
 	var data = {name:name};
 	$.get(url,data,function(result){
 		var sts = result.state;
+		if(sts==0){
+			$('#ver_name').empty().html('用户名不可用').css({'color':'red'});
+			return;
+		}
+		if(sts==3){
+			$('#ver_name').empty().html('用户名不能为空').css({'color':'red'});
+			return false;
+		}
 		//状态2位用户名可用
 		if(sts==2){
 			//ver_name
 			$('#ver_name').empty().html('用户名可用').css({'color':'green'});
-			return;
-		}
-		if(sts==0){
-			$('#ver_name').empty().html('用户名不可用').css({'color':'red'});
-			return;
+			return true;
 		}
 	});
 	

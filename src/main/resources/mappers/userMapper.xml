@@ -8,8 +8,7 @@
 		cn_user_name as userName,
 		cn_user_password as password,
 		cn_user_token as token,
-		cn_user_nick as
-		nick
+		cn_user_nick as nick
 		from cn_user
 	</sql>
 	<select id="findAll" resultType="cn.note.entity.User">
@@ -33,6 +32,18 @@
 		<include refid="selectAllInfo" />
 		where cn_user_id=#{userId} or cn_user_name=#{name}
 	</select>
+	<insert id="addUser" parameterType="cn.note.entity.User">
+	     insert into cn_user (cn_user_id,
+	                          cn_user_name,
+	                          cn_user_password,
+	                          cn_user_nick,
+	                          cn_user_token
+	                  )values(#{userId},
+	                          #{userName},
+	                          #{password},
+	                          #{nick},
+	                          #{token})
+	</insert>
 	<!-- <select id="findUserByName" parameterType="string" resultType="cn.xie.note.entity.User"> 
 		select cn_user_id as userId, cn_user_name as name, cn_user_password as password, 
 		cn_user_token as token, cn_user_nick as nick from cn_user where cn_user_name=#{name} 
