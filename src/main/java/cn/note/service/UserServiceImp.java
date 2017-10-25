@@ -15,8 +15,6 @@ public class UserServiceImp implements UserService {
 	
 	@Resource
 	private UserDao ud;
-	@Resource
-	private User user;
 	
 	//登录功能
 	public User login(String name, String password) throws NameException, PasswordException {
@@ -78,6 +76,7 @@ public class UserServiceImp implements UserService {
 		if(!password.equals(conf)) {
 			throw new PasswordException("密码确认与密码不一致");
 		}else{
+			User user = new User();
 			user.setUserId(UUID.randomUUID().toString());
 			user.setName(name);
 			user.setNick(nick);
