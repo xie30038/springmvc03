@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class>
+ 3 	<stu id="001">
+ 4 		<name>Allen</name>
+ 5 		<sex>男</sex>
+ 6 		<age>20</age>
+ 7 	</stu>
+ 8 	<stu id="002">
+ 9		<name>namy</name>
+10		<sex>女</sex>
+11 		<age>18</age>
+12  </stu>
+13  <stu id="003">
+14 		<name>lufy</name>
+15 		<sex>男</sex>
+16 		<age>18</age>
+17 	</stu>
+18 </class>
