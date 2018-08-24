@@ -24,35 +24,91 @@
                         http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool-3.2.xsd
                         http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.8.xsd">
 
-
-	<bean id="dataSource" destroy-method="close"
-		class="org.apache.commons.dbcp.BasicDataSource">
+	<!-- spring扫描组件 -->
+	<context:component-scan base-package="cn.note.aop" />
+	<!-- 配置文件中启动AspectJ的注解功能 ,默认是false，要将其改为true -->
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy> 
+    
+	<!-- 引入配置文件，等价于下面被注释掉的配置 -->
+	<context:property-placeholder location="classpath:jdbc.properties" file-encoding="UTF-8" ignore-unresolvable="true"/>  
+	<!--  <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>  -->
+	<!-- 引入配置文件 
+    <bean id="propertyConfigurer"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
+        <property name="locations" value="classpath:jdbc.properties" />
+    </bean>     -->
+	
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close" >
 		<!-- <property name="driverClassName" value="oracle.jdbc.OracleDriver"/> -->
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="driverClassName" value="${jdbc.driverClassName}" />  <!-- com.mysql.jdbc.Driver -->
 		<!-- <property name="url" value="jdbc:oracle:thin:@localhost:1521:orclx"/> -->
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/cloud_note?characterEncoding=utf-8" />
+		<property name="url" value="${jdbc.url}" />  <!-- jdbc:mysql://localhost:3306/cloud_note?characterEncoding=utf-8 -->
 		<!-- jdbc:mysql://localhost:3306/cloud_note?characterEncoding=utf8;useUnicode=true;sessionVariables=storage_engine%3DInnoDB;useJDBCCompliantTimezoneShift=true;useLegacyDatetimeCode=false;serverTimezone=UTC -->
 		<!-- jdbc:mysql://localhost:3306/cloud_note?characterEncoding=utf-8 -->
 		<!-- jdbc:mysql://localhost:3306/cn_xie?characterEncoding=utf8&useUnicode=true&sessionVariables=storage_engine%3DInnoDB&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC -->
-		<!-- <property name="username" value="sys as sysdba"/> <property name="password" 
-			value="Xie123456"/> -->
-		<property name="username" value="root" />
-		<property name="password" value="" />
-
+		<!-- <property name="username" value="sys as sysdba"/> <property name="password" value="Xie123456"/> -->
+		<property name="username" value="${jdbc.username}" />    <!-- root -->
+		<property name="password" value="${jdbc.password}" />
+		
+		<property name="initialSize" value="${dbcp.initialSize}" />   <!-- ${dbcp.initialSize} 15 -->
+        <property name="maxActive" value="${dbcp.maxActive}" />  <!-- ${dbcp.maxActive} 5000 -->
+        <property name="maxIdle" value="${dbcp.maxIdle}" />   <!-- ${dbcp.maxIdle} 0 -->
+        <property name="maxWait" value="${dbcp.maxWait}" />    <!-- ${dbcp.maxWait} -->
+        <property name="defaultAutoCommit" value="${dbcp.defaultAutoCommit}" />   <!-- ${dbcp.defaultAutoCommit} -->
+        <property name="removeAbandoned" value="${dbcp.removeAbandoned}" />   <!-- ${dbcp.removeAbandoned} -->
+        <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}" />    <!-- ${dbcp.removeAbandonedTimeout} -->
+        <property name="logAbandoned" value="${dbcp.logAbandoned}" />
+        
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}" />
+        <property name="validationQuery" value="${dbcp.validationQuery}" />    <!-- ${dbcp.validationQuery} -->
+        <property name="testWhileIdle" value="${dbcp.testWhileIdle}" />
+        <property name="testOnBorrow" value="${dbcp.testOnBorrow}" />
+        <property name="testOnReturn" value="${dbcp.testOnReturn}" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。分库分表较多的数据库，建议配置为false。-->
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${dbcp.maxPoolPreparedStatementPerConnectionSize}" />
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat" /> 
+		
 	</bean>
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	
+	<!--  这个问题是无法识别占位符，就是在加载过程中直接把 ${jdbc.maxActive }当做字符串处理了。
+	      myabatis使用MapperScannerConfigurer扫描模式后他会优先于PropertyPlaceholderConfigurer执行，
+	          所以这个时候，${jdbc.maxActive }还没有被properties文件里面的值所替换，就出现TypeMismatchException，然后就异常了。 -->
+	<bean id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations" value="classpath:mappers/*.xml" />
+		<!-- plugins  插件 -->
+		<property name="plugins">
+			<list>  <!-- list标签和array标签都可以 -->
+				<bean id="pageHelper" class="com.github.pagehelper.PageHelper"> 
+					<property name="properties">
+						<value>
+							dialect=mysql
+							reasonable=true
+						</value>
+					</property>
+				</bean>
+			</list>
+		</property>    
 	</bean>
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> <!-- 可以不写， -->
+	
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- dao层注解配置，如果把下面的配置去掉，相应的dao层接口把@Repository注解去掉 -->
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+		<!-- 这里 用sqlSessionFactoryBeanName，而不是sqlSessionFactory，接下来用value而不是ref -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> <!-- 可以不写， -->
+	    <!-- 如果使用这种方式配置，spring-mybatis.xml文件中将不能识别properties文件中的${参数} -->
+	    <!-- <property name="sqlSessionFactory" ref="sqlSessionFactory"/> -->  
 		<property name="basePackage" value="cn.note.dao" />
 	</bean>
-	<!-- 配置声明式事物处理 -->
+	
 	<!-- 配置事务管理器 -->
-	<bean id="txManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	<!-- 用于驱动@Transactional注解 -->

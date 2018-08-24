@@ -3,6 +3,8 @@ package cn.note.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import cn.note.entity.User;
 
 /**
@@ -16,6 +18,7 @@ import cn.note.entity.User;
  * 版本号：v1.0
  *
  */
+@Repository
 public interface UserDao {
 	List<User> findAll();  //查询全部用户信息
 	User findUserByName(String name);  //通过用户名查询用户信息

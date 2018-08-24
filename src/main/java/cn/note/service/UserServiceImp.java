@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cn.note.dao.UserDao;
 import cn.note.entity.User;
+import cn.note.util.Action;
 import cn.note.util.Md5Pwd;
 
 @Service("userService")
@@ -17,6 +18,7 @@ public class UserServiceImp implements UserService {
 	private UserDao ud;
 	
 	//登录功能
+	
 	public User login(String name, String password) throws NameException, PasswordException {
 		if(name == null || name.trim().equals("")) {
 			throw new NameException("用户名不能为空");

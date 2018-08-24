@@ -16,7 +16,7 @@ import cn.note.util.JsonResult;
 
 @Controller
 @RequestMapping("user")
-public class UserController {
+public class UserController extends AbstractController {
 	
 	@Resource
 	private UserService us;

@@ -2,7 +2,11 @@ package cn.note.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.stereotype.Repository;
+
 import cn.note.entity.NoteBook;
+import cn.note.util.Page;
 
 /**
  * 
@@ -15,8 +19,10 @@ import cn.note.entity.NoteBook;
  * 版本号：v1.0
  *
  */
+@Repository
 public interface NoteBookDao {
 	List<NoteBook> findAllNoteBook();    //查询全部笔记本信息
 	NoteBook findNoteBookByNotebookId(String noteBookId);   //根据笔记本ID查询笔记本
 	List<NoteBook> findNoteBookByUserId(String userId);   //根据用户名查询笔记本信息
+	//Page<NoteBook> pageByConditions(RowBounds rowBounds, NoteBook noteBook);    //分页查询
 }

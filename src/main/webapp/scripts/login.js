@@ -2,6 +2,7 @@
 //登录页面加载时执行的函数
 var SUCCESS = 0;
 var ERROR = 1;
+var us = {};
 $(function(){
 	//点击事件，用户登录
 	$('#login').click(loginAction);
@@ -20,7 +21,34 @@ $(function(){
 
 //用户登录函数
 function loginAction(){
-	
+	var url = 'user/login.do';
+	var name = $('#count').val();
+	var pwd = $('#password').val();
+	var data = {name:name,password:pwd};
+	$.post(url,data,function(result){
+		var sts = result.state;
+		if(sts == 0){
+			//获取用户名信息
+			var user = result.data;
+			us = result.data;
+			console.log(user);
+			//跳转到笔记页面  通过?+...传参数
+			//可以使用cookie保存数据。
+			SetCookie('userId',user.userId);
+			//window.localStorage.setItem("lastname", user.userName);
+			localStorage.name = user.name;
+			localStorage.userId = user.userId;
+			localStorage.password = user.password;
+			location.href='edit.html';
+			
+		}else if(sts == 2 || sts == 3 || sts == 4){
+			$('#count_msg').empty().html(result.message).css({"color":"red"});
+		}else if(sts == 6 || sts == 7 || sts == 8 || sts == 9){
+			$('#password_msg').empty().html(result.message).css({'color':'red'});
+		}else{
+			alert(result.message);
+		}
+	});
 }
 
 //检验用户名函数
@@ -52,9 +80,9 @@ function checkPassword(){
 	var pwd = $('#password').val();
 	if(!pwd){
 		$('#password_msg').empty().html('密码不能为空').css({'color':'red'});
-		return;
+		return false;
 	}
-	var reg = /^w{3,20}$/;
+	var reg = /^\w{3,20}$/;
 	if(reg.test(pwd)){
 		$('#password_msg').empty();
 		return true;
@@ -81,11 +109,14 @@ function registerAction(){
 			$('#count_msg').empty();
 			$('#password_msg').empty();
 			$('#password').focus();
-		}else if(sts == 2){
+		}else if(sts == 2 || sts == 3 || sts == 4 || sts == 5){
 			$('#warning_1').empty().html(result.message);
 			$('#warning_1').show();
-		}else if(sts ==3){
-			
+		}else if(sts == 6 || sts == 7 || sts == 8){
+			$('#warning_2').empty().html(result.message);
+			$('#warning_2').show();
+		}else{
+			alert(result.message)
 		}
 	});
 	

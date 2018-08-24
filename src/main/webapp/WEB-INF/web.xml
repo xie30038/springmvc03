@@ -11,24 +11,29 @@
     <welcome-file>log_in.html</welcome-file>
   </welcome-file-list>
   
-  	<servlet>
-    <description></description>
+  <!-- springmvc-servlet -->
+  <servlet>
     <display-name>DispatcherServlet</display-name>
     <servlet-name>DispatcherServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <async-supported>true</async-supported>
     <init-param>
-      <description></description>
       <param-name>contextConfigLocation</param-name>
       <param-value>classpath:spring-*.xml</param-value>
     </init-param>
+    <load-on-startup>1</load-on-startup>
   </servlet>
+  
   <servlet-mapping>
     <servlet-name>DispatcherServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  
+  <!-- 编码过滤器 -->
   <filter>
      <filter-name>encoding</filter-name>
      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+     <async-supported>true</async-supported>
      <init-param>
         <param-name>encoding</param-name>
         <param-value>UTF-8</param-value>
@@ -38,38 +43,29 @@
   	<filter-name>encoding</filter-name>
   	<servlet-name>DispatcherServlet</servlet-name>
   </filter-mapping>
- <!--  <servlet>
-    <description></description>
-    <display-name>DispatcherServlet</display-name>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <description></description>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:spring-*.xml</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DispatcherServlet</servlet-name>
-    <url-pattern>*.do</url-pattern>
-  </servlet-mapping>
   
+   <!-- Spring监听器 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>  -->
+  <!-- 防止Spring内存溢出监听器 
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>    -->
   
-  <filter>
-    <display-name>CharacterEncodingFilter</display-name>
-    <filter-name>encoding</filter-name>
-    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-    <init-param>
-      <description></description>
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>encoding</filter-name>
-    <servlet-name>springmvc</servlet-name>
-  </filter-mapping> -->
+  <!--log4j配置文件开始-->  
+  <context-param>  
+     <param-name>log4jConfigLocation</param-name>  
+     <param-value>classpath:log4j.properties</param-value>  
+  </context-param>  
+  <context-param>  
+    <param-name>webAppRootKey</param-name>  
+    <param-value>springmvc03app.root</param-value>  
+  </context-param>    
+  <listener>  
+     <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>  
+  </listener>  
+  
 	
   
 </web-app>

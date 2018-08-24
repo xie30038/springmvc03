@@ -17,6 +17,12 @@
         <link rel="stylesheet" href="styles/prettify.css"/>
 		<!-- Ueditor编辑器CSS -->
 		<link href="styles/umeditor.min.css" type="text/css" rel="stylesheet">
+		<script type="text/javascript" src="scripts/vue.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery.min.js"></script>
+		<script type="text/javascript" src="scripts/cookie_util.js"></script>
+		<script type="text/javascript" src="scripts/init.js"></script>
+		<script type="text/javascript" src="scripts/notebook.js"></script>
+		<script type="text/javascript" src="scripts/note.js"></script>
     </head>
     <body class="animated fadeIn">
         <header class="header">
@@ -66,7 +72,7 @@
 					<div class="module" data-toggle="niceScroll">
 						<div class="chat-contact">
 							<div class="contact-body">
-								<ul class="contacts-list">
+								<ul id='notebooks' class="contacts-list">
 									<li class="online">
 									<a  class='checked'>
 									<i class="fa fa-book" title="online" rel="tooltip-bottom">

@@ -16,5 +16,5 @@ import cn.note.entity.NoteBook;
  *
  */
 public interface NoteBookService {
-	List<NoteBook> findNoteBookByUserId(String userId) throws NoteBookNoteFoundException;
+	List<NoteBook> findNoteBookByUserId(String userId) throws NoteBookNotFoundException;
 }

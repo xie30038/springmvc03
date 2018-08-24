@@ -31,12 +31,12 @@ public class NoteBookServiceImp implements NoteBookService {
 	private NoteBookDao nbd;
 	
 	//通过用户ID查找笔记本
-	public List<NoteBook> findNoteBookByUserId(String userId) throws NoteBookNoteFoundException {
+	public List<NoteBook> findNoteBookByUserId(String userId) throws NoteBookNotFoundException {
 		if(userId == null || userId.trim().equals("")) {
 			throw new UserNotFoundException("用户Id不能为空");
 		}
 		if(ud.findUserById(userId) == null) {
-			throw new NoteBookNoteFoundException("用户不存在");
+			throw new NoteBookNotFoundException("用户不存在");
 		}
 		return nbd.findNoteBookByUserId(userId);
 	}

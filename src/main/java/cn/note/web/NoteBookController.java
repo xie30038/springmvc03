@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.note.service.NoteBookNoteFoundException;
+import cn.note.service.NoteBookNotFoundException;
 import cn.note.service.NoteBookService;
 import cn.note.service.UserNotFoundException;
 import cn.note.util.JsonResult;
@@ -25,8 +25,8 @@ public class NoteBookController extends AbstractController {
 	}
 	
 	@ResponseBody
-	@ExceptionHandler(NoteBookNoteFoundException.class)
-	public JsonResult noteBookExp(NoteBookNoteFoundException e) {
+	@ExceptionHandler(NoteBookNotFoundException.class)
+	public JsonResult noteBookExp(NoteBookNotFoundException e) {
 		e.printStackTrace();
 		return new JsonResult(e);
 	}
